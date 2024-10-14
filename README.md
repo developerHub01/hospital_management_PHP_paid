@@ -1,1 +1,0 @@
-# hospital_management_PHP_paid
