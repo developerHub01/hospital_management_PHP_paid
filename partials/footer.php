@@ -1,5 +1,5 @@
-<script src="../js/bootstrap.js"></script>
-<script src="../js/index.js"></script>
+<script src="../public/js/bootstrap.js"></script>
+<script src="../public/js/index.js"></script>
 </body>
 
 </html>
