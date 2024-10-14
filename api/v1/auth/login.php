@@ -7,6 +7,8 @@ header("Access-Control-Allow-Methods: GET");
 
 require_once "../../utils/respons_builder.php";
 require_once "../../model/UserModel.php";
+require_once "../../utils/create_token.php";
+require_once "../../utils/setTokenCookies.php";
 
 if ($_SERVER['REQUEST_METHOD'] != "POST")
   return response();
@@ -23,12 +25,11 @@ if (!isset($body))
 
 $payload = [];
 
-$payload['name'] = isset($body['name']) ? trim($body['name']) : null;
 $payload['email'] = isset($body['email']) ? trim($body['email']) : null;
-$payload['password'] = isset($body['password']) ? password_hash(trim($body['password']), PASSWORD_DEFAULT) : null;
+$payload['password'] = isset($body['password']) ? trim($body['password']) : null;
 
 
-if (empty($payload['name']) || empty($payload['email']) || empty($payload['password']))
+if (empty($payload['email']) || empty($payload['password']))
   return response(
     [
       "statusCode" => 400,
@@ -38,14 +39,25 @@ if (empty($payload['name']) || empty($payload['email']) || empty($payload['passw
   );
 
 $userModel = new UserModel();
-$isCreated = $userModel->createUser($payload);
+$userData = $userModel->isCredentialsMatched($payload);
 
-if (!$isCreated)
-  return response();
+if (!$userData)
+  return response([
+    "statusCode" => 403,
+    "success" => false,
+    "message" => "Invalid email or password",
+  ]);
 
+
+unset($userData['password']);
+
+$token = createToken(["id" => $userData['id']]);
+
+setAccessTokenCookies("access_token", $token, 7 * 24 * 60 * 60);
 
 response([
-  "statusCode" => 201,
+  "statusCode" => 200,
   "success" => true,
-  "message" => "user created successfully",
+  "message" => "logged in successfully",
+  "data" => $userData
 ]);

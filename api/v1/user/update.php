@@ -8,7 +8,6 @@ include_once "../../utils/respons_builder.php";
 if ($_SERVER['REQUEST_METHOD'] != "PATCH")
   return response();
 
-
 response([
   "statusCode" => 201,
   "success" => true,

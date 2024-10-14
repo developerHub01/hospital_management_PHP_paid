@@ -10,3 +10,7 @@ $dotenv_file_path = __DIR__ . "/../";
 
 $dotenv = Dotenv\Dotenv::createImmutable($dotenv_file_path);
 $dotenv->load();
+
+$config = [
+  "JWT_SECRET_KEY"=> $_ENV['JWT_SECRET_KEY'],
+];

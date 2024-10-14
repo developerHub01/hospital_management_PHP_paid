@@ -46,4 +46,14 @@ class UserModel
       ]
     );
   }
+
+  public function isCredentialsMatched($payload)
+  {
+    $user = $this->findUserByEmail($payload['email']);
+
+    if ($user && password_verify($payload['password'], $user['password']))
+      return $user;
+
+    return false;
+  }
 }
