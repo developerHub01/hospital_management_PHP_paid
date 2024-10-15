@@ -4,7 +4,8 @@ require_once "responsBuilder.php";
 
 function uploadImage($image, $directory_name)
 {
-  $path = __DIR__ . "/../../public/uploads/$directory_name";
+  $mainPath = "uploads/$directory_name";
+  $path = __DIR__ . "/../../public/$mainPath";
   /* if path not exist */
   if (!is_dir($path))
     mkdir($path, 0777, true);
@@ -34,5 +35,5 @@ function uploadImage($image, $directory_name)
 
   print_r(move_uploaded_file($image['tmp_name'], $filePath));
 
-  return $filePath;
+  return "$mainPath/$newFile";
 }

@@ -25,7 +25,7 @@ $payload = [];
 
 $payload['name'] = isset($body['name']) ? trim($body['name']) : null;
 $payload['email'] = isset($body['email']) ? trim($body['email']) : null;
-$payload['password'] = isset($body['password']) ? password_hash(trim($body['password']), PASSWORD_DEFAULT) : null;
+$payload['password'] = isset($body['password']) ? password_hash(trim($body['password']), PASSWORD_BCRYPT) : null;
 
 
 if (empty($payload['name']) || empty($payload['email']) || empty($payload['password']))

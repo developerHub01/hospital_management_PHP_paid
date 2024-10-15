@@ -5,7 +5,7 @@ require_once "../../config/database.php";
 class UserModel
 {
   private $conn;
-  private $table = "user";
+  private $table = "users";
 
   public function __construct()
   {
@@ -26,6 +26,11 @@ class UserModel
     return $stmt->fetch(PDO::FETCH_ASSOC);
   }
 
+  public function isEmailExist($email)
+  {
+    return (bool) ($this->findUserByEmail($email));
+  }
+
   public function createUser($payload)
   {
     if ($this->findUserByEmail($payload['email']))
@@ -44,6 +49,21 @@ class UserModel
         ":email" => $payload['email'],
         ":password" => $payload['password']
       ]
+    );
+  }
+
+  public function updateUser($id, $fieldToUpdate, $params)
+  {
+    $fieldToUpdate = implode(', ', $fieldToUpdate);
+
+    $query = "UPDATE $this->table SET $fieldToUpdate WHERE id= $id ";
+
+    echo $query;
+
+    $stmt = $this->conn->prepare($query);
+
+    return $stmt->execute(
+      $params
     );
   }
 
