@@ -37,9 +37,9 @@ class UserModel
       return false;
 
     $query = "INSERT INTO $this->table
-              (name, email, password)
+              (name, email, password, dob, gender)
               VALUES 
-              (:name, :email, :password)";
+              (:name, :email, :password, :dob, :gender)";
 
     $stmt = $this->conn->prepare($query);
 
@@ -47,7 +47,9 @@ class UserModel
       [
         ":name" => $payload['name'],
         ":email" => $payload['email'],
-        ":password" => $payload['password']
+        ":password" => $payload['password'],
+        ":gender" => $payload['gender'],
+        ":dob" => $payload['dob']
       ]
     );
   }
