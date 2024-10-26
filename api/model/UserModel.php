@@ -78,4 +78,23 @@ class UserModel
 
     return false;
   }
+
+  public function readCurrentUserData()
+  {
+    $userData = readToken("access_token");
+
+    $userId = $userData['id'];
+
+    // $userData = 
+
+    $query = "SELECT * FROM $this->table INNER JOIN admins ON $this->table.id = admins.user_id WHERE $this->table.id = :userId";
+
+    $stmt = $this->conn->prepare($query);
+
+    $stmt->execute([
+      ":userId" => $userId,
+    ]);
+
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+  }
 }
