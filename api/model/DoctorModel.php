@@ -18,8 +18,6 @@ class DoctorModel
     if ($this->findDoctorByUserId($payload['user_id']))
       return false;
 
-    print_r($payload);
-
     $query = "INSERT INTO $this->table
               (user_id, specialization)
               VALUES 
