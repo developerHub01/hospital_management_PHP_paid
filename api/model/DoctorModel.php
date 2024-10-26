@@ -48,7 +48,7 @@ class DoctorModel
     return $stmt->fetch(PDO::FETCH_ASSOC);
   }
 
-  public function update($id, $specialization)
+  public function update($userId, $specialization)
   {
     $query = "UPDATE $this->table SET specialization = :specialization WHERE id = :id";
 
@@ -56,13 +56,13 @@ class DoctorModel
 
     return $stmt->execute(
       [
-        ":id" => $id,
+        ":id" => $userId,
         ":specialization" => $specialization
       ]
     );
   }
 
-  public function delete($id)
+  public function delete($userId)
   {
     $query = "DELETE FROM $this->table WHERE id = :id";
 
@@ -70,25 +70,8 @@ class DoctorModel
 
     return $stmt->execute(
       [
-        ":id" => $id,
+        ":id" => $userId,
       ]
     );
-  }
-
-  public function readCurrentUserData()
-  {
-    $userData = readToken("access_token");
-
-    $userId = $userData['id'];
-
-    $query = "SELECT * FROM $this->table INNER JOIN admin ON $this->table.id = admin.user_id WHERE $this->table.id = :userId";
-
-    $stmt = $this->conn->prepare($query);
-
-    $stmt->execute([
-      ":userId" => $userId,
-    ]);
-
-    return $stmt->fetch(PDO::FETCH_ASSOC);
   }
 }

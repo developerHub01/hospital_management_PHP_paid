@@ -6,7 +6,7 @@ header("Content-Type: application/json");
 header("Access-Control-Allow-Methods: GET");
 
 require_once "../../utils/responsBuilder.php";
-require_once "../../model/DoctorModel.php";
+require_once "../../model/AdminModel.php";
 require_once "../../model/UserModel.php";
 require_once "../../utils/readToken.php";
 
@@ -24,12 +24,9 @@ if (!isset($body))
     "message" => "Invalid JSON body"
   ]);
 
-$payload = [];
+$userId = isset($body['user_id']) ? $body['user_id'] : null;
 
-$payload['user_id'] = isset($body['user_id']) ? $body['user_id'] : null;
-$payload['specialization'] = isset($body['specialization']) ? trim($body['specialization']) : null;
-
-if (empty($payload['user_id']) || empty($payload['specialization']))
+if (empty($userId))
   return response(
     [
       "statusCode" => 400,
@@ -39,11 +36,11 @@ if (empty($payload['user_id']) || empty($payload['specialization']))
   );
 
 $userModel = new UserModel();
-$doctorModel = new DoctorModel();
+$adminModel = new AdminModel();
 
 $currentUserData = $userModel->readCurrentUserData();
 
-if (!$currentUserData || !in_array($currentUserData['role'], ["admin", "super_admin"]))
+if (!$currentUserData || $currentUserData['role'] !== "super_admin")
   return response(
     [
       "statusCode" => 401,
@@ -52,7 +49,7 @@ if (!$currentUserData || !in_array($currentUserData['role'], ["admin", "super_ad
     ]
   );
 
-$isCreated = $doctorModel->create($payload);
+$isCreated = $adminModel->create($userId);
 
 if (!$isCreated)
   return response();
@@ -61,5 +58,5 @@ if (!$isCreated)
 response([
   "statusCode" => 201,
   "success" => true,
-  "message" => "doctor created successfully",
+  "message" => "admin created successfully",
 ]);

@@ -6,12 +6,15 @@ header("Content-Type: application/json");
 header("Access-Control-Allow-Methods: GET");
 
 require_once "../../utils/responsBuilder.php";
+require_once "../../model/AdminModel.php";
 require_once "../../model/UserModel.php";
+require_once "../../utils/readToken.php";
 
-if ($_SERVER['REQUEST_METHOD'] != "POST")
+if ($_SERVER['REQUEST_METHOD'] != "DELETE")
   return response();
 
 $rawData = file_get_contents("php://input");
+
 $body = json_decode($rawData, true);
 
 if (!isset($body))
@@ -21,14 +24,9 @@ if (!isset($body))
     "message" => "Invalid JSON body"
   ]);
 
-$payload = [];
+$userId = $body['user_id'];
 
-$payload['name'] = isset($body['name']) ? trim($body['name']) : null;
-$payload['email'] = isset($body['email']) ? trim($body['email']) : null;
-$payload['password'] = isset($body['password']) ? password_hash(trim($body['password']), PASSWORD_BCRYPT) : null;
-
-
-if (empty($payload['name']) || empty($payload['email']) || empty($payload['password']))
+if (empty($userId))
   return response(
     [
       "statusCode" => 400,
@@ -38,14 +36,27 @@ if (empty($payload['name']) || empty($payload['email']) || empty($payload['passw
   );
 
 $userModel = new UserModel();
-$isCreated = $userModel->createUser($payload);
+$adminModel = new AdminModel();
 
-if (!$isCreated)
+$currentUserData = $userModel->readCurrentUserData();
+
+if (!$currentUserData || $currentUserData['role'] !== "super_admin")
+  return response(
+    [
+      "statusCode" => 401,
+      "success" => false,
+      "message" => "unauthorized access",
+    ]
+  );
+
+$isDeleted = $adminModel->delete($userId);
+
+if (!$isDeleted)
   return response();
 
 
 response([
-  "statusCode" => 201,
+  "statusCode" => 200,
   "success" => true,
-  "message" => "user created successfully",
+  "message" => "admin deleted successfully",
 ]);
