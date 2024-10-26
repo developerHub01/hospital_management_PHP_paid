@@ -6,9 +6,9 @@ header("Content-Type: application/json");
 header("Access-Control-Allow-Methods: GET");
 
 require_once "../../utils/responsBuilder.php";
-require_once "../../model/AdminModel.php";
-require_once "../../model/UserModel.php";
 require_once "../../utils/readToken.php";
+require_once "../../model/UserModel.php";
+require_once "../../model/WardModel.php";
 
 if ($_SERVER['REQUEST_METHOD'] != "POST")
   return response();
@@ -24,9 +24,9 @@ if (!isset($body))
     "message" => "Invalid JSON body"
   ]);
 
-$userId = isset($body['user_id']) ? $body['user_id'] : null;
+$capacity = isset($body['capacity']) ? trim($body['capacity']) : null;
 
-if (empty($userId))
+if (empty($capacity))
   return response(
     [
       "statusCode" => 400,
@@ -35,12 +35,20 @@ if (empty($userId))
     ]
   );
 
+if (!$capacity)
+  return response(
+    [
+      "statusCode" => 400,
+      "success" => false,
+      "message" => "ward capacity must be greater than zero",
+    ]
+  );
+
 $userModel = new UserModel();
-$adminModel = new AdminModel();
 
 $currentUserData = $userModel->readCurrentUserData();
 
-if (!$currentUserData || $currentUserData['role'] !== "super_admin")
+if (!$currentUserData || !in_array($currentUserData['role'], ["admin", "super_admin"]))
   return response(
     [
       "statusCode" => 401,
@@ -49,7 +57,9 @@ if (!$currentUserData || $currentUserData['role'] !== "super_admin")
     ]
   );
 
-$isCreated = $adminModel->create($userId);
+$wardModel = new WardModel();
+
+$isCreated = $wardModel->create($capacity);
 
 if (!$isCreated)
   return response();
@@ -58,5 +68,5 @@ if (!$isCreated)
 response([
   "statusCode" => 201,
   "success" => true,
-  "message" => "doctor created successfully",
+  "message" => "ward created successfully",
 ]);

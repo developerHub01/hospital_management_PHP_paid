@@ -85,8 +85,6 @@ class UserModel
 
     $userId = $userData['id'];
 
-    // $userData = 
-
     $query = "SELECT * FROM $this->table INNER JOIN admins ON $this->table.id = admins.user_id WHERE $this->table.id = :userId";
 
     $stmt = $this->conn->prepare($query);

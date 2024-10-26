@@ -6,11 +6,11 @@ header("Content-Type: application/json");
 header("Access-Control-Allow-Methods: GET");
 
 require_once "../../utils/responsBuilder.php";
-require_once "../../model/AdminModel.php";
+require_once "../../model/WardModel.php";
 require_once "../../model/UserModel.php";
 require_once "../../utils/readToken.php";
 
-if ($_SERVER['REQUEST_METHOD'] != "POST")
+if ($_SERVER['REQUEST_METHOD'] != "DELETE")
   return response();
 
 $rawData = file_get_contents("php://input");
@@ -24,9 +24,9 @@ if (!isset($body))
     "message" => "Invalid JSON body"
   ]);
 
-$userId = isset($body['user_id']) ? $body['user_id'] : null;
+$wardId = $body['ward_id'];
 
-if (empty($userId))
+if (empty($wardId))
   return response(
     [
       "statusCode" => 400,
@@ -36,11 +36,11 @@ if (empty($userId))
   );
 
 $userModel = new UserModel();
-$adminModel = new AdminModel();
+$wardModel = new WardModel();
 
 $currentUserData = $userModel->readCurrentUserData();
 
-if (!$currentUserData || $currentUserData['role'] !== "super_admin")
+if (!$currentUserData || !in_array($currentUserData['role'], ["admin", "super_admin"]))
   return response(
     [
       "statusCode" => 401,
@@ -49,14 +49,25 @@ if (!$currentUserData || $currentUserData['role'] !== "super_admin")
     ]
   );
 
-$isCreated = $adminModel->create($userId);
+$wardData = $wardModel->findWardByWardId($wardId);
 
-if (!$isCreated)
+if ($wardData['current_patients_count'])
+  return response(
+    [
+      "statusCode" => 403,
+      "success" => false,
+      "message" => "ward can't delete. ward have patients",
+    ]
+  );
+
+$isDeleted = $wardModel->delete($wardId);
+
+if (!$isDeleted)
   return response();
 
 
 response([
-  "statusCode" => 201,
+  "statusCode" => 200,
   "success" => true,
-  "message" => "doctor created successfully",
+  "message" => "ward deleted successfully",
 ]);
