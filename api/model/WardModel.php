@@ -13,6 +13,17 @@ class WardModel
     $this->conn = $database->getConnection();
   }
 
+  public function index()
+  {
+    $query = "SELECT * FROM $this->table";
+
+    $stmt = $this->conn->prepare($query);
+
+    $stmt->execute();
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  }
+
   public function create($capacity)
   {
     $query = "INSERT INTO $this->table

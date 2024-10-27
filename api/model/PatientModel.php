@@ -13,6 +13,26 @@ class PatientModel
     $this->conn = $database->getConnection();
   }
 
+  public function index()
+  {
+    $query = "SELECT
+              users.id as user_id,
+              $this->table.id as patient_id,
+              users.name,
+              users.email,
+              users.dob,
+              users.gender 
+              FROM $this->table 
+              INNER JOIN users ON 
+              users.id = $this->table.user_id";
+
+    $stmt = $this->conn->prepare($query);
+
+    $stmt->execute();
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  }
+
   public function create($payload)
   {
     if ($this->findPatientByUserId($payload['user_id']))
@@ -50,7 +70,6 @@ class PatientModel
 
     return $stmt->fetch(PDO::FETCH_ASSOC);
   }
-
 
   public function findPatientById($id)
   {

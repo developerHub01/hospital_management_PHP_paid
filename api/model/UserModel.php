@@ -25,6 +25,19 @@ class UserModel
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
 
+  public function findById($id)
+  {
+    $query = "SELECT id, name, email, dob, gender FROM $this->table WHERE id = :id";
+
+    $stmt = $this->conn->prepare($query);
+
+    $stmt->execute([
+      ":id" => $id,
+    ]);
+
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+  }
+
   public function findUserByEmail($email)
   {
     $query = "SELECT * FROM $this->table WHERE email = :email";

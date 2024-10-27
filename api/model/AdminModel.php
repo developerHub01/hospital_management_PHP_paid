@@ -13,6 +13,27 @@ class AdminModel
     $this->conn = $database->getConnection();
   }
 
+  public function index()
+  {
+    $query = "SELECT
+              $this->table.id,
+              users.id as user_id,
+              $this->table.role,
+              users.name,
+              users.email,
+              users.dob,
+              users.gender 
+              FROM $this->table 
+              INNER JOIN users ON 
+              users.id = $this->table.user_id";
+
+    $stmt = $this->conn->prepare($query);
+
+    $stmt->execute();
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  }
+
   public function create($userId)
   {
     if ($this->findAdminByUserId($userId))
