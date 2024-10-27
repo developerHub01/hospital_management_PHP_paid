@@ -13,7 +13,7 @@ include "./config/dotenv.php";
 
         <div class="d-flex align-items-center h-custom-2 px-5 ms-xl-4 mt-5 pt-5 pt-xl-0 mt-xl-n5">
 
-          <form style="width: 23rem;">
+          <form style="width: 23rem;" id="register-form">
             <h3 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Register</h3>
 
             <div data-mdb-input-init class="form-outline mb-2">
@@ -63,35 +63,35 @@ include "./config/dotenv.php";
   </div>
 </section>
 
-<script>
-  const form = document.querySelector('form');
-
-  console.log(form);
-
-
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-
-    const formData = {};
-    for (let input of form.elements) {
-      if (input.name && input.value) {
-        formData[input.name] = input.value;
-      }
-    }
-    try {
-      const response = await axios.post("/api/v1/user/create.php", formData);
-
-      const data = response.data;
-
-      if (data && response.status === 201) window.location.href = "/login.php";
-    } catch (error) {
-      alert(data.message || "something went wrong")
-    }
-  });
-</script>
-
 <?php
 include "./partials/footer.php";
-
 ?>
+
+<script>
+  $(document).ready(() => {
+    $("#register-form").on("submit", function (e) {
+      e.preventDefault();
+
+      const formSerializeData = $(this).serializeArray();
+
+      const formData = {};
+
+      for (const { name, value } of formSerializeData) {
+        formData[name] = value.trim();
+      }
+
+      $.ajax({
+        url: "/api/v1/user/create.php",
+        method: "POST",
+        data: JSON.stringify(formData),
+        success: (response) => {
+          console.log(response);
+
+          if (!response.success) return
+
+          window.location.href = "/login.php";
+        }
+      })
+    })
+  })
+</script>
