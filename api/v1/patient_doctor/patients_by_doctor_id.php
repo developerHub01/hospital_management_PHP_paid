@@ -25,9 +25,9 @@ if (!isset($body))
     "message" => "Invalid JSON body"
   ]);
 
-$patientId = $body['patient_id'];
+$doctorId = $body['doctor_id'];
 
-if (empty($patientId))
+if (empty($doctorId))
   return response(
     [
       "statusCode" => 400,
@@ -50,14 +50,14 @@ if (!$currentUserData || !in_array($currentUserData['role'], ["admin", "super_ad
     ]
   );
 
-$doctorList = $patientDoctorModel->findDoctorsByPatientId($patientId);
+$patientList = $patientDoctorModel->findPatientsByDoctorId($doctorId);
 
-if (!$doctorList)
+if (!$patientList)
   return response();
 
 response([
   "statusCode" => 200,
   "success" => true,
-  "message" => "doctors found successfully",
-  "data" => $doctorList
+  "message" => "patients found successfully",
+  "data" => $patientList
 ]);

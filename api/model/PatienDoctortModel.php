@@ -55,7 +55,7 @@ class PatienDoctortModel
     $query = "SELECT 
               doctors.user_id,
               doctors.specialization,
-              $this->table.id as doctor_id,
+              doctors.id as doctor_id,
               users.name,
               users.email,
               users.dob,
@@ -79,46 +79,28 @@ class PatienDoctortModel
 
   public function findPatientsByDoctorId($doctorId)
   {
-    $query = "SELECT * FROM $this->table 
-    INNER JOIN patients ON 
-      $this->table.patient_id = patients.id 
-    INNER JOIN users ON 
-      $this->table.patient_id = users.id 
-    WHERE patient_id = :patient_id";
+    $query = "SELECT 
+              patients.user_id,
+              patients.ward_id,
+              patients.id as patient_id,
+              users.name,
+              users.email,
+              users.dob,
+              users.gender
+
+              FROM doctor_patients 
+              INNER JOIN patients ON 
+              doctor_patients.patient_id = patients.id
+              INNER JOIN users ON 
+              patients.user_id = users.id
+              WHERE doctor_patients.doctor_id = :doctor_id";
 
     $stmt = $this->conn->prepare($query);
 
     $stmt->execute([
       ":doctor_id" => $doctorId,
     ]);
-
-    return $stmt->fetch(PDO::FETCH_ASSOC);
-  }
-
-
-  public function findPatientById($id)
-  {
-    $query = "SELECT * FROM $this->table WHERE id = :id";
-
-    $stmt = $this->conn->prepare($query);
-
-    $stmt->execute([
-      ":id" => $id,
-    ]);
-
-    return $stmt->fetch(PDO::FETCH_ASSOC);
-  }
-
-  public function findPatientByWardId($wardId)
-  {
-    $query = "SELECT * FROM $this->table WHERE ward_id = :ward_id";
-
-    $stmt = $this->conn->prepare($query);
-
-    $stmt->execute([
-      ":ward_id" => $wardId,
-    ]);
-
+    
     return $stmt->fetch(PDO::FETCH_ASSOC);
   }
 
