@@ -15,7 +15,7 @@ class PatienDoctortModel
 
   public function create($payload)
   {
-    if ($this->findDoctorsPatientById($payload['patient_id'], $payload['doctor_id']))
+    if ($this->findDoctorPatientById($payload['patient_id'], $payload['doctor_id']))
       return false;
 
     $query = "INSERT INTO $this->table
@@ -33,7 +33,7 @@ class PatienDoctortModel
     );
   }
 
-  public function findDoctorsPatientById($patientId, $doctorId)
+  public function findDoctorPatientById($patientId, $doctorId)
   {
     $query = "SELECT * FROM $this->table
     WHERE patient_id = :patient_id AND
@@ -52,12 +52,21 @@ class PatienDoctortModel
 
   public function findDoctorsByPatientId($patientId)
   {
-    $query = "SELECT * FROM $this->table 
-    INNER JOIN doctors ON 
-      $this->table.patient_id = doctors.id 
-    INNER JOIN users ON 
-      $this->table.doctor_id = users.id 
-    WHERE patient_id = :patient_id";
+    $query = "SELECT 
+              doctors.user_id,
+              doctors.specialization,
+              $this->table.id as doctor_id,
+              users.name,
+              users.email,
+              users.dob,
+              users.gender
+
+              FROM $this->table 
+              INNER JOIN doctors ON 
+              $this->table.doctor_id = doctors.id
+              INNER JOIN users ON 
+              doctors.user_id = users.id
+              WHERE doctor_patients.patient_id = :patient_id";
 
     $stmt = $this->conn->prepare($query);
 
@@ -113,29 +122,16 @@ class PatienDoctortModel
     return $stmt->fetch(PDO::FETCH_ASSOC);
   }
 
-  public function update($userId, $wardId)
+  public function delete($patient_id, $doctor_id)
   {
-    $query = "UPDATE $this->table SET ward_id = :ward_id WHERE id = :id";
+    $query = "DELETE FROM $this->table WHERE patient_id = :patient_id AND doctor_id = :doctor_id";
 
     $stmt = $this->conn->prepare($query);
 
     return $stmt->execute(
       [
-        ":id" => $userId,
-        ":ward_id" => $wardId
-      ]
-    );
-  }
-
-  public function delete($id)
-  {
-    $query = "DELETE FROM $this->table WHERE id = :id";
-
-    $stmt = $this->conn->prepare($query);
-
-    return $stmt->execute(
-      [
-        ":id" => $id,
+        ":patient_id" => $patient_id,
+        ":doctor_id" => $doctor_id,
       ]
     );
   }
