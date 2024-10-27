@@ -66,15 +66,33 @@ class AdminModel
     return $stmt->fetch(PDO::FETCH_ASSOC);
   }
 
-  public function delete($userId)
+  public function findAdminById($adminId)
   {
-    $query = "DELETE FROM $this->table WHERE user_id = :user_id";
+    $query = "SELECT * FROM $this->table WHERE id = :admin_id";
+
+    $stmt = $this->conn->prepare($query);
+
+    $stmt->execute([
+      ":admin_id" => $adminId,
+    ]);
+
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+  }
+
+  public function delete($adminId)
+  {
+    $adminData = $this->findAdminById($adminId);
+
+    if ($adminData && $adminData['role'] === "super_admin")
+      return false;
+
+    $query = "DELETE FROM $this->table WHERE id = :admin_id";
 
     $stmt = $this->conn->prepare($query);
 
     return $stmt->execute(
       [
-        ":user_id" => $userId,
+        ":admin_id" => $adminId,
       ]
     );
   }

@@ -18,6 +18,7 @@ class PatientModel
     $query = "SELECT
               users.id as user_id,
               $this->table.id as patient_id,
+              $this->table.ward_id,
               users.name,
               users.email,
               users.dob,

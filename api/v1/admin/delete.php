@@ -24,9 +24,9 @@ if (!isset($body))
     "message" => "Invalid JSON body"
   ]);
 
-$userId = $body['user_id'];
+$adminId = $body['admin_id'];
 
-if (empty($userId))
+if (empty($adminId))
   return response(
     [
       "statusCode" => 400,
@@ -49,11 +49,10 @@ if (!$currentUserData || $currentUserData['role'] !== "super_admin")
     ]
   );
 
-$isDeleted = $adminModel->delete($userId);
+$isDeleted = $adminModel->delete($adminId);
 
 if (!$isDeleted)
   return response();
-
 
 response([
   "statusCode" => 200,

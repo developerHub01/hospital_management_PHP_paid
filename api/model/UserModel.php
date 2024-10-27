@@ -38,6 +38,33 @@ class UserModel
     return $stmt->fetch(PDO::FETCH_ASSOC);
   }
 
+  public function findFullUserById($id)
+  {
+    $query = "SELECT 
+              $this->table.id, 
+              name, 
+              email, 
+              dob, 
+              gender,
+              admins.role 
+              FROM $this->table
+              INNER JOIN admins 
+              ON $this->table.id = admins.user_id  
+              WHERE $this->table.id = :id";
+
+    $stmt = $this->conn->prepare($query);
+
+    $stmt->execute([
+      ":id" => $id,
+    ]);
+
+    $userData = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($userData) return $userData;
+
+    return $this->findById($id);    
+  }
+
   public function findUserByEmail($email)
   {
     $query = "SELECT * FROM $this->table WHERE email = :email";
@@ -85,8 +112,6 @@ class UserModel
     $fieldToUpdate = implode(', ', $fieldToUpdate);
 
     $query = "UPDATE $this->table SET $fieldToUpdate WHERE id= $id ";
-
-    echo $query;
 
     $stmt = $this->conn->prepare($query);
 

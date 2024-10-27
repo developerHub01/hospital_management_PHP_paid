@@ -13,6 +13,17 @@ class PatienDoctortModel
     $this->conn = $database->getConnection();
   }
 
+  public function index()
+  {
+    $query = "SELECT * FROM $this->table";
+
+    $stmt = $this->conn->prepare($query);
+
+    $stmt->execute();
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  }
+
   public function create($payload)
   {
     if ($this->findDoctorPatientById($payload['patient_id'], $payload['doctor_id']))
@@ -74,7 +85,7 @@ class PatienDoctortModel
       ":patient_id" => $patientId,
     ]);
 
-    return $stmt->fetch(PDO::FETCH_ASSOC);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
 
   public function findPatientsByDoctorId($doctorId)
@@ -101,7 +112,7 @@ class PatienDoctortModel
       ":doctor_id" => $doctorId,
     ]);
     
-    return $stmt->fetch(PDO::FETCH_ASSOC);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
 
   public function delete($patient_id, $doctor_id)
