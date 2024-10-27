@@ -13,6 +13,18 @@ class UserModel
     $this->conn = $database->getConnection();
   }
 
+  public function index()
+  {
+    $query = "SELECT id, name, email, dob, gender FROM $this->table";
+
+    $stmt = $this->conn->prepare($query);
+
+    $stmt->execute();
+
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  }
+
   public function findUserByEmail($email)
   {
     $query = "SELECT * FROM $this->table WHERE email = :email";
@@ -30,6 +42,7 @@ class UserModel
   {
     return (bool) ($this->findUserByEmail($email));
   }
+
 
   public function createUser($payload)
   {
