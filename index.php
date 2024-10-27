@@ -7,7 +7,7 @@ include "./config/dotenv.php";
   <?php
   include "./partials/sidebar.php";
   ?>
-  <main class="container">
+  <main class="container py-5">
     <div class="row row-cols-1 row-cols-md-2 g-2 short-cat">
       <div class="col-xl-8 col-md-6 col-sm-12">
         <div class="card">

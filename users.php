@@ -7,9 +7,9 @@ include "./config/dotenv.php";
   <?php
   include "./partials/sidebar.php";
   ?>
-  <main class="container">
+  <main class="container py-5">
     <section class="shadow table-responsive mb-4">
-      <table class="table table-hover table-striped text-center">
+      <table class="table table-hover table-striped text-center" id="users-table">
         <thead>
           <tr>
             <th scope="col">#</th>
@@ -21,14 +21,14 @@ include "./config/dotenv.php";
           </tr>
         </thead>
         <tbody>
-          <tr>
+          <!-- <tr>
             <th scope="row">1</th>
             <td>Id</td>
             <td>Name</td>
             <td>Email</td>
             <td>DOB</td>
             <td>Gender</td>
-          </tr>
+          </tr> -->
         </tbody>
       </table>
     </section>
@@ -37,7 +37,39 @@ include "./config/dotenv.php";
 
 <?php
 include "./partials/footer.php";
-
-
-
 ?>
+
+<script>
+  const loadUsers = () => {
+    $.ajax({
+      url: "/api/v1/user/all.php",
+      method: "GET",
+      success: (res) => {
+        const { data } = res;
+
+        if (!data) return;
+
+        const tableBody = $("#users-table tbody");
+        tableBody.empty();
+
+        data.forEach(({ id, name, email, gender, dob }, index) => {
+
+          tableBody.append(`
+            <tr>
+              <th scope="row">${index + 1}</th>
+              <td>${id}</td>
+              <td>${name}</td>
+              <td>${email}</td>
+              <td>${dob}</td>
+              <td>${gender}</td>
+            </tr>
+          `);
+        })
+      }
+    })
+  }
+
+  $(document).ready(() => {
+    loadUsers();
+  })
+</script>

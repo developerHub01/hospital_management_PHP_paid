@@ -7,7 +7,7 @@ include "./config/dotenv.php";
   <?php
   include "./partials/sidebar.php";
   ?>
-  <main class="container">
+  <main class="container py-5">
     <section>
 
     </section>

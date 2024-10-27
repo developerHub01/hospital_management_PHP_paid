@@ -7,9 +7,9 @@ include "./config/dotenv.php";
   <?php
   include "./partials/sidebar.php";
   ?>
-  <main class="container">
-    <section class="shadow">
-      <table class="table table-hover table-striped text-center">
+  <main class="container py-5">
+    <section class="shadow table-responsive mb-4">
+      <table class="patients-table table table-hover table-striped text-center">
         <thead>
           <tr>
             <th scope="col">#</th>
@@ -23,7 +23,7 @@ include "./config/dotenv.php";
           </tr>
         </thead>
         <tbody>
-          <tr>
+          <!-- <tr>
             <th scope="row">1</th>
             <td>User Id</td>
             <td>Patient Id</td>
@@ -34,7 +34,7 @@ include "./config/dotenv.php";
             <td>
               <button type="button" class="btn btn-danger btn-sm">Delete</button>
             </td>
-          </tr>
+          </tr> -->
         </tbody>
       </table>
     </section>
@@ -46,5 +46,42 @@ include "./config/dotenv.php";
 
 <?php
 include "./partials/footer.php";
-
 ?>
+
+<script>
+  const loadPatients = () => {
+    $.ajax({
+      url: "/api/v1/patient/all.php",
+      method: "GET",
+      success: (res) => {
+        const { data } = res;
+
+        if (!data) return;
+
+        const tableBody = $("#patients-table tbody");
+        tableBody.empty();
+
+        data.forEach(({ user_id, patient_id, name, email, gender, dob }, index) => {
+          tableBody.append(`
+            <tr>
+              <th scope="row">${index + 1}</th>
+              <td>${user_id}</td>
+              <td>${patient_id}</td>
+              <td>${name}</td>
+              <td>${email}</td>
+              <td>${dob}</td>
+              <td>${gender}</td>
+              <td>
+                <button type="button" class="btn btn-danger btn-sm">Delete</button>
+              </td>
+            </tr>
+          `);
+        })
+      }
+    })
+  }
+
+  $(document).ready(() => {
+    loadPatients();
+  })
+</script>
