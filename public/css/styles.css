@@ -1,19 +1,31 @@
-:root{
-  --primaryColor: #0496ff;
+:root {
+  --primaryColor: #0d6efd;
   --whiteColor: #ffffff;
 }
+body {
+  overflow: hidden;
+}
 
-.sidebar{
+.sidebar {
   width: 250px;
   height: 100vh;
+  overflow: auto;
   flex-shrink: 0;
   padding: 8px;
 }
-.logo-container{
+.sidebar .wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.logo-container {
   width: 100%;
   text-align: center;
 }
-.logo{
+.logo {
   color: var(--whiteColor);
   text-decoration: none;
   text-transform: capitalize;
@@ -22,29 +34,52 @@
   text-align: center;
 }
 
-.sidebar-list{
+.sidebar-list {
   display: flex;
   flex-direction: column;
   gap: 10px;
   padding-top: 20px;
 }
-.sidebar-list a{
+.sidebar-list > * {
+  background: var(--primaryColor);
   color: var(--whiteColor);
   text-decoration: none;
   text-transform: capitalize;
   padding: 5px 10px;
   border-radius: 5px;
   display: block;
+  border: none;
   transition: all 0.3s ease-in-out;
 }
-.sidebar-list a:hover{
+.sidebar-list .active {
+  background: var(--whiteColor);
+  color: var(--primaryColor);
+  text-decoration: none;
+  text-transform: capitalize;
+  padding: 5px 10px;
+  border-radius: 5px;
+  display: block;
+  border: none;
+  transition: all 0.3s ease-in-out;
+}
+.sidebar-list button {
+  text-align: left;
+}
+.sidebar-list > *:hover {
   color: var(--primaryColor);
   background: var(--whiteColor);
 }
 
 main {
   padding: 10px;
+  width: 100%;
+  height: 100vh;
+  overflow-y: auto;
 }
-.short-cat .card-number{
+main .container {
+  width: 100%;
+  height: 100%;
+}
+.short-cat .card-number {
   font-size: 40px;
 }
