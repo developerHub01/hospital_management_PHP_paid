@@ -36,7 +36,6 @@ include "./config/dotenv.php";
               </div>
             </div>
 
-
             <div data-mdb-input-init class="form-outline mb-2">
               <label class="form-label" for="form2Example18">Email address</label>
               <input type="email" name="email" id="form2Example18" class="form-control form-control" />
