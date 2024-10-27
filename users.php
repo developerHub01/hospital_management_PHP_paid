@@ -7,21 +7,22 @@ include "./config/dotenv.php";
   <?php
   include "./partials/sidebar.php";
   ?>
-  <main class="container py-5">
-    <section class="shadow table-responsive mb-4">
-      <table class="table table-hover table-striped text-center" id="users-table">
-        <thead>
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">Id</th>
-            <th scope="col">Name</th>
-            <th scope="col">Email</th>
-            <th scope="col">DOB</th>
-            <th scope="col">Gender</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- <tr>
+  <main class="wrapper">
+    <section class="container py-5">
+      <section class="shadow table-responsive mb-4">
+        <table class="table table-hover table-striped text-center" id="users-table">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Id</th>
+              <th scope="col">Name</th>
+              <th scope="col">Email</th>
+              <th scope="col">DOB</th>
+              <th scope="col">Gender</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- <tr>
             <th scope="row">1</th>
             <td>Id</td>
             <td>Name</td>
@@ -29,8 +30,9 @@ include "./config/dotenv.php";
             <td>DOB</td>
             <td>Gender</td>
           </tr> -->
-        </tbody>
-      </table>
+          </tbody>
+        </table>
+      </section>
     </section>
   </main>
 </section>
