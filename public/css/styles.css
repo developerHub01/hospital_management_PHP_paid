@@ -1,0 +1,50 @@
+:root{
+  --primaryColor: #0496ff;
+  --whiteColor: #ffffff;
+}
+
+.sidebar{
+  width: 250px;
+  height: 100vh;
+  flex-shrink: 0;
+  padding: 8px;
+}
+.logo-container{
+  width: 100%;
+  text-align: center;
+}
+.logo{
+  color: var(--whiteColor);
+  text-decoration: none;
+  text-transform: capitalize;
+  font-size: 25px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.sidebar-list{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 20px;
+}
+.sidebar-list a{
+  color: var(--whiteColor);
+  text-decoration: none;
+  text-transform: capitalize;
+  padding: 5px 10px;
+  border-radius: 5px;
+  display: block;
+  transition: all 0.3s ease-in-out;
+}
+.sidebar-list a:hover{
+  color: var(--primaryColor);
+  background: var(--whiteColor);
+}
+
+main {
+  padding: 10px;
+}
+.short-cat .card-number{
+  font-size: 40px;
+}
