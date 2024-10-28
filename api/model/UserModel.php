@@ -86,9 +86,6 @@ class UserModel
 
   public function createUser($payload)
   {
-    if ($this->findUserByEmail($payload['email']))
-      return false;
-
     $query = "INSERT INTO $this->table
               (name, email, password, dob, gender)
               VALUES 

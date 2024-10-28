@@ -50,6 +50,13 @@ if (!in_array(strtolower($payload['gender']), ["male", "female"]))
   );
 
 $userModel = new UserModel();
+
+if ($userModel->findUserByEmail($payload['email']))
+  return response([
+    "statusCode" => 403,
+    "message" => "this email is already taken!",
+  ]);
+
 $isCreated = $userModel->createUser($payload);
 
 if (!$isCreated)
