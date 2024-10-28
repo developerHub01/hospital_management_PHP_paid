@@ -147,6 +147,9 @@ include "./partials/footer.php";
             </tr>
           `);
         })
+      },
+      error: (error) => {
+        if (error.responseJSON?.message) alert(error.responseJSON?.message);
       }
     })
   }
@@ -165,7 +168,7 @@ include "./partials/footer.php";
           } else alert(res.message);
         },
         error: (error) => {
-          alert(error?.responseJSON?.message || "something went wrong");
+          if (error.responseJSON?.message) alert(error.responseJSON?.message);
         }
       })
     })

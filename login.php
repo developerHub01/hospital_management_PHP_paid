@@ -1,6 +1,11 @@
 <?php
 include "./partials/header.php";
 include "./config/dotenv.php";
+
+if (isset($_COOKIE['access_token'])) {
+  header("Location: /");
+  exit;
+}
 ?>
 
 <section class="vh-100">
@@ -50,12 +55,11 @@ include "./partials/footer.php";
 ?>
 
 <script>
-  $(document).ready(() => {
+  const handleLogin = () => {
     $("#login-form").on("submit", function (e) {
       e.preventDefault();
 
       const formSerializeData = $(this).serializeArray();
-      console.log(formSerializeData);
 
       const formData = {};
 
@@ -74,5 +78,26 @@ include "./partials/footer.php";
         }
       })
     })
+  }
+
+  const handleAuth = () => {
+    $.ajax({
+      url: "/api/v1/user/me.php",
+      method: "GET",
+      success: (res) => {
+        const { data } = res;
+
+        if (data) window.location.href = "/";
+      },
+      error: (error) => {
+        if(error.responseJSON?.message) alert(error.responseJSON?.message);
+      }
+    })
+  }
+
+
+  $(document).ready(() => {
+    handleAuth();
+    handleLogin();
   })
 </script>

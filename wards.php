@@ -43,7 +43,7 @@ include "./config/dotenv.php";
       </div>
     </section>
   </main>
-  
+
   <section id="action-popups">
     <div class="modal fade" id="createWardModel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog">
@@ -219,6 +219,8 @@ include "./partials/footer.php";
         $("#action-section").html("")
         $("#action-popups").html("")
         $(".btn-delete").remove();
+      }, error: (error) => {
+        if (error.responseJSON?.message) alert(error.responseJSON?.message);
       }
     })
   }
